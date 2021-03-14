@@ -12,3 +12,13 @@ code {
     monospace;
 }
 
+button{
+  padding: 0;
+  border:0;
+  background: none;
+  font-size: 100%;
+  font-family: inherit;
+}
+button:focus{
+  outline: none;
+}

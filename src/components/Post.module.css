@@ -1,0 +1,35 @@
+.bold {
+    font-weight: bold;
+}
+
+.post {
+    padding-bottom: 3%;
+}
+
+.Header {
+    display: flex;
+    align-items: center;
+}
+
+.userName{
+    font-weight: bold;
+}
+
+.profilePhoto {
+    border-radius: 50%;
+    width: 7%;
+    margin: 2%;
+}
+
+.postPhoto {
+    object-fit: cover;
+    width: 100%;
+}
+
+
+.postTimestamp {
+    font-weight: bold;
+    font-size: 75%;
+    color: #a1a1a1;
+    margin-top: 0;
+}
