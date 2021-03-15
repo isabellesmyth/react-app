@@ -1,6 +1,6 @@
 import React from 'react';
 
-import css from './Activity.module.css';
+
 import publicUrl from 'utils/publicUrl';
 
 function Activity() {
