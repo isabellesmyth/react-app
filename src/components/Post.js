@@ -28,17 +28,17 @@ class Post extends React.Component {
                     <img src={this.props.likes.self ? publicUrl('/assets/like.svg') : publicUrl('/assets/unlike.svg')}/>
                     <img src={publicUrl('/assets/comment.svg')}/>
                 </div>
-                <div className={`${css.bold} ${css.postItem}`}>{this.props.likes.count} likes</div>
+                <div className={`${css.bold} ${css.item}`}>{this.props.likes.count} likes</div>
             </div>
 
-            <div className={css.postItem}>
+            <div className={css.item}>
                 <Comments username={this.props.user.id} text={this.props.post.desc}/>
                 {this.props.comments.map((c, i) => (
                     <Comments key={i} username={c.userId} text={c.text}/>
                 ))}
             </div>
 
-            <div className={`${css.postItem} ${css.postTimestamp}`}>{timespan(this.props.post.datetime)}</div>
+            <div className={`${css.item} ${css.postTimestamp}`}>{timespan(this.props.post.datetime)}</div>
         </section>
 );
     }

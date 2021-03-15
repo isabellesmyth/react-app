@@ -3,7 +3,9 @@
 }
 
 .post {
-    padding-bottom: 3%;
+    
+    padding-top: 5%;
+   
 }
 
 .Header {
@@ -11,6 +13,14 @@
     align-items: center;
 }
 
+.activityBar img {
+    margin-right: 5%;
+    margin: 1%;
+}
+
+.item{
+    margin: 1%;
+}
 .userName{
     font-weight: bold;
 }
