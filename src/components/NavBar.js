@@ -1,11 +1,9 @@
 import React from 'react';
 import css from './NavBar.module.css';
 import publicUrl from 'utils/publicUrl';
-import { ReactComponent as Home }  from './assets/home.svg';
-import { ReactComponent as Explore }  from './assets/explore.svg';
-import { ReactComponent as NewPost }  from './assets/newpost.svg';
-import { ReactComponent as Profile }  from './assets/profile.svg';
-import { ReactComponent as Activity }  from './assets/like.svg';
+
+
+
 
 
 function Navbar(props) {
@@ -19,30 +17,30 @@ function Navbar(props) {
             <div className={css.navItem}>
         
                 <button onClick={e=>handleNavChange('home')}>
-                    <Home/>
+                <img src={publicUrl('/assets/home.svg')}/>
                 </button>
             </div>
             <div className={css.navItem}>
               
                 <button onClick={e=>handleNavChange('explore')}>
-                    <Explore/>
+                <img src={publicUrl('/assets/explore.svg')}/>
                 </button>
             </div>
             <div className={css.navItem}>
                
                 <button onClick={e=>handleNavChange('newPost')}>
-                    <NewPost/>
+                <img src={publicUrl('/assets/newpost.svg')}/>
                 </button>
             </div>
             <div className={css.navItem}>
                 
                 <button onClick={e=>handleNavChange('like')}>
-                    <Activity/>
+                <img src={publicUrl('/assets/like.svg')}/>
                 </button>
             </div>
             <div className={css.navItem}>
                 <button onClick={e=>handleNavChange('profile')}>
-                    <Profile/>
+                <img src={publicUrl('/assets/profile.svg')}/>
                 </button>
             </div>
 			

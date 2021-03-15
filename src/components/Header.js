@@ -1,26 +1,24 @@
 import React from 'react';
-import css from './App.module.css';
-import logo from './assets/logo.png';
+import css from './Header.module.css';
 import publicUrl from 'utils/publicUrl';
-import { ReactComponent as Camera }  from './assets/camera.svg';
-import { ReactComponent as Message }  from './assets/message.svg';
+
 
 function Header() {
     return (
         <nav className={css.header}>
             <div className={css.navItem}>
                 <button>
-                    <Camera/>
+                <img src={publicUrl('/assets/message.svg')}/>
                 </button>
             </div>
             <div className={css.navItem}>
                 <button>
-                <img src={logo} alt="logo"/>
+                <img src={publicUrl('/assets/logo.png')}/>
                 </button>
             </div>
             <div className={css.navItem}>
                 <button>
-                    <Message/>
+                <img src={publicUrl('/assets/message.svg')}/>
                 </button>
             </div>
 

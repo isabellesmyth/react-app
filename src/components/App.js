@@ -8,6 +8,7 @@ import Activity from './Activity';
 import NewPost from './NewPost';
 import Explore from './Explore';
 import Profile from './Profile';
+import publicUrl from 'utils/publicUrl';
 
 class App extends React.Component {
 
