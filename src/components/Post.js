@@ -13,6 +13,8 @@ class Post extends React.Component {
         super(props);
     }
 
+ 
+
     render() {
         return (      
             <section className={css.post}>
@@ -24,10 +26,10 @@ class Post extends React.Component {
             <img className={css.postPhoto} src={publicUrl(this.props.post.photo)} alt={this.props.post.desc}/>
             
             <div className={css.activityBar}>
-                <div>
+                <button >
                     <img src={this.props.likes.self ? publicUrl('/assets/like.svg') : publicUrl('/assets/unlike.svg')}/>
                     <img src={publicUrl('/assets/comment.svg')}/>
-                </div>
+                </button>
                 <div className={`${css.bold} ${css.item}`}>{this.props.likes.count} likes</div>
             </div>
 

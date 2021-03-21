@@ -9,21 +9,23 @@ import NewPost from './NewPost';
 import Explore from './Explore';
 import Profile from './Profile';
 import publicUrl from 'utils/publicUrl';
+import initialStore from 'utils/initialStore';
 
 class App extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      page: 'home'
+      page: 'home',
+      store: initialStore // initialize the store as part of the state
     };
-    this.setPage = this.setPage.bind(this);
   }
 
 
   setPage(page) {
     this.setState({ page: page });
   }
+  
   renderMain(page) {
     switch (page) {
       case "home": return <Home />;
@@ -31,8 +33,11 @@ class App extends React.Component {
       case "newPost": return <NewPost />;
       case "like": return <Activity />;
       case "profile": return <Profile />;
-      default: return <Home />;
+      default: return <Home 
+      store={this.state.store} />;
+      
     }
+    
   }
 
  
