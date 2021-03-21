@@ -6,43 +6,49 @@ import Comments from './Comments'
 
 
 
+function Post(props) {
+   
 
+    function handleLike(){
+        props.onLike(props.post.id);
 
-class Post extends React.Component {
-    constructor(props) {
-        super(props);
     }
 
- 
+    function handleUnlike(){
+        props.onUnlike(props.post.id);
+    }
 
-    render() {
-        return (      
+    return (      
             <section className={css.post}>
 
             <header className={css.Header}>
-                <img className={css.profilePhoto} src={publicUrl(this.props.user.photo)} alt={this.props.user.id}/>
-                <span className={css.bold}>{this.props.post.userId}</span>
+                <img className={css.profilePhoto} src={publicUrl(props.user.photo)} alt={props.user.id}/>
+                <span className={css.bold}>{props.post.userId}</span>
             </header>
-            <img className={css.postPhoto} src={publicUrl(this.props.post.photo)} alt={this.props.post.desc}/>
+            <img className={css.postPhoto} src={publicUrl(props.post.photo)} alt={props.post.desc}/>
             
             <div className={css.activityBar}>
                 <button >
-                    <img src={this.props.likes.self ? publicUrl('/assets/like.svg') : publicUrl('/assets/unlike.svg')}/>
-                    <img src={publicUrl('/assets/comment.svg')}/>
+                    {props.likes.self?
+                    <img src={ publicUrl('/assets/unlike.svg')} onClick={handleUnlike}/>:
+                    <img src={ publicUrl('/assets/like.svg')} onClick={handleLike}/>
+                    }
                 </button>
-                <div className={`${css.bold} ${css.item}`}>{this.props.likes.count} likes</div>
+                    <img src={publicUrl('/assets/comment.svg')}/>
+                
+                <div className={`${css.bold} ${css.item}`}>{props.likes.count} likes</div>
             </div>
 
             <div className={css.item}>
-                <Comments username={this.props.user.id} text={this.props.post.desc}/>
-                {this.props.comments.map((c, i) => (
+                <Comments username={props.user.id} text={props.post.desc}/>
+                {props.comments.map((c, i) => (
                     <Comments key={i} username={c.userId} text={c.text}/>
                 ))}
             </div>
 
-            <div className={`${css.item} ${css.postTimestamp}`}>{timespan(this.props.post.datetime)}</div>
+            <div className={`${css.item} ${css.postTimestamp}`}>{timespan(props.post.datetime)}</div>
         </section>
 );
     }
-}
+
 export default Post;

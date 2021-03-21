@@ -1,6 +1,8 @@
 import React from 'react';
 import css from './App.module.css';
 import Post from './Post';
+
+
 function Home(props) {
 
   const {store} = props; // retrieve store
@@ -8,17 +10,18 @@ function Home(props) {
   <div>
     {store.posts.sort((a,b)=>new Date(b.datetime) - new Date(a.datetime))
     .map(post=>
-              <Post
+          <Post
           key={post.id}
           user={findUser(post, store)}
           post={post}
           comments={findComments(post, store)}
           likes={findLikes(post, store)}
+          onLike={props.onLike} 
+          onUnlike={props.onUnlike}
         />
         )}
    </div>
   );
- 
 }
 
 function findUser(post, store){

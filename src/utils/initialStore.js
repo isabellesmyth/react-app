@@ -1,5 +1,5 @@
 /* sample data store*/
-export default { 
+const initialStore =  { 
     currentUserId: "judy",
     users:[
         {
@@ -107,26 +107,9 @@ export default {
         }
     ],
     likes:[
-        {
-            userId:"judy",
-            postId:"post-1",
-            datetime:"2020-02-09T22:50:40Z"
-        },
-        {
-            userId:"nick",
-            postId:"post-2",
-            datetime:"2020-02-09T22:51:40Z"
-        },
-        {
-            userId:"flash",
-            postId:"post-2",
-            datetime:"2020-02-09T22:54:20Z"
-        },
-        {
-            userId:"judy",
-            postId:"post-3",
-            datetime:"2020-02-09T22:53:40Z"
-        }
+        
     ]
 }
+
+export default initialStore;
 
