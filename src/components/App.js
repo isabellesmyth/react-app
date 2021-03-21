@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, {useState} from 'react';
 import Home from './Home';
 import css from './App.module.css';
 import Header from './Header';
@@ -10,89 +10,143 @@ import Explore from './Explore';
 import Profile from './Profile';
 import publicUrl from 'utils/publicUrl';
 import initialStore from 'utils/initialStore';
+import {findUser, findPosts} from 'utils/find';
+import uniqueId from 'utils/uniqueId';
 
-class App extends React.Component {
+function App() {
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      page: 'home',
-      store: initialStore // initialize the store as part of the state
-      
-    };
-    this.addLike = this.addLike.bind(this);
-		this.removeLike = this.removeLike.bind(this);
-  }
+    const [page, setPage] = useState('home');
+    const [store, setStore] = useState(initialStore); 
+
+    
 
 
-  setPage(page) {
-    this.setState({ page: page });
-  }
-
-  renderMain(page) {
+  function renderMain(page) {
     switch (page) {
       case "home": return <Home
-      store={this.state.store}
-      onLike={this.addLike} 
-      onUnlike={this.removeLike}
-    />;;
+      store={store}
+      onLike={addLike} 
+      onUnlike={removeLike}
+      onComment={addComment}
+      
+    />;
       case "explore": return <Explore />;
-      case "newPost": return <NewPost />;
+      case "newPost": return <NewPost 
+      store={store}
+      addPost={addPost}
+      cancelPost={cancelPost}
+      />;
       case "like": return <Activity />;
-      case "profile": return <Profile />;
+      case "profile": return <Profile
+        user={findUser(store.currentUserId, store)}
+        posts={findPosts(store.currentUserId, store)}
+      />;
       default: return <Home
-      store={this.state.store}
-      onLike={this.addLike} 
-      onUnlike={this.removeLike}
+      store={store}
+      onLike={addLike}
+      onUnlike={removeLike}
+      onComment={addComment}
+
+     
     />;
       
     }
     
   }
-  addLike(postId){
+
+  function addPost(photo, desc){
+    const newPost = {
+      id: uniqueId('post'),
+      userId: store.currentUserId,
+      photo,
+      desc,
+      datetime: new Date().toISOString()
+    };
+    setStore({
+      ...store,
+      posts: store.posts.concat(newPost)
+    });
+		setPage('home');
+		// TODO:
+		// 1. Create a new post object (use uniqueId('post') to create an id)
+		// 2. Update the store 
+		// 3. Call setPage to come back to the home page
+  }
+	function cancelPost(){
+    setPage('home');
+		// TODO:
+		// 1. Call setPage to come back to the home page (we will use Router to improve this)
+	}
+
+
+
+
+
+  function addComment(postId, text){
+    const comment = {
+      userId: store.currentUserId, 
+      postId,
+      text,
+      datetime: new Date().toISOString()
+    };
+    setStore({
+      ...store,
+        comments:store.comments.concat(comment)
+    });
+  }
+  function addLike(postId){
     const like = {
-        userId: this.state.store.currentUserId, 
+        userId: store.currentUserId, 
         postId, // make sure you understand this shorthand syntax
         datetime: new Date().toISOString()
     };
     
-    this.setState(state=>({
-        store:{
-          ...state.store,// spread props. make sure you understand this
-          likes: state.store.likes.concat(like)
-        }
-    }));
+    setStore({
+          ...store,// spread props. make sure you understand this
+          likes: store.likes.concat(like)
+        
+    });
   }
   
-  removeLike(postId){
-    const like = {
-      userId: this.state.store.currentUserId, 
-      postId, // make sure you understand this shorthand syntax
-      datetime: new Date().toISOString()
-  };
-    this.setState( state=>({
-      store:{
-      ...state.store,
-      likes: state.store.likes.filter(like=>!(like.userId===state.store.currentUserId && like.postId===postId))
-    }}));
+  function removeLike(postId){
+   
+  setStore({
+    ...store,// spread props. make sure you understand this
+    likes: store.likes.filter(like=>!(like.userId===store.currentUserId && like.postId===postId))
+  
+});
+    
     // use filter and currentUserId to remove the like from the likes array
   }
 
+  function addComment(postId, text){
+    const comment = {
+      userId: store.currentUserId, 
+      postId,
+      text,
+      datetime: new Date().toISOString()
+    };
+    setStore({
+      ...store,
+        comments:store.comments.concat(comment)
+    });
+  }
+
  
-  render() {
-    return(
+  return(
     <div className={css.container}>
     <Header />
     <main className={css.content}>
-      {this.renderMain(this.state.page)}
+      {renderMain(page)}
     </main>
-    <NavBar onNavChange={this.setPage} />
+    <NavBar onNavChange={setPage} />
   </div>
     );
-  }
-
-
+  
 }
+
+
+
 
 
 

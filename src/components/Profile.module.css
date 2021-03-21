@@ -1,0 +1,45 @@
+.bold {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 2%;
+}
+
+.profileHeader {
+    display: flex;
+    align-items: center;
+    font-size: 120%;
+    
+}
+.profileHeader img{
+
+    border-radius: 50%;
+}
+
+.profileName {
+    font-weight: normal;
+}
+
+.profilePhoto {
+    border-radius: 50%;
+    width: 12%;
+    margin: 2%;
+}
+
+.bio {
+    margin: 1%;
+    margin-bottom: 2%;
+}
+
+hr {
+    background-color: #d6d6d6;
+    height: 1px;
+    width: 98%;
+    border: none;
+}
+
+
+.posts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 5px;
+}

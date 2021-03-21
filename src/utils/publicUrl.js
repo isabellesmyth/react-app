@@ -1,3 +1,4 @@
-export default function (assetPath){
-    return process.env.PUBLIC_URL+assetPath;
+export default (assetPath)=>{
+    const publicUrl = assetPath.startsWith('data:image')?'':process.env.PUBLIC_URL
+    return publicUrl + assetPath;
 }
