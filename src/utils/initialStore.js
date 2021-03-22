@@ -1,5 +1,5 @@
 /* sample data store*/
-const initialStore =  { 
+export default { 
     currentUserId: "judy",
     users:[
         {
@@ -111,5 +111,5 @@ const initialStore =  {
     ]
 }
 
-export default initialStore;
+
 

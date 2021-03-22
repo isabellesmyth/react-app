@@ -6,6 +6,9 @@ import publicUrl from 'utils/publicUrl';
 import PostThumbnail from './PostThumbnail';
 
 import css from './Profile.module.css';
+
+
+
 function Profile(props) {
     return(
         <div>

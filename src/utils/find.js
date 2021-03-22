@@ -1,6 +1,6 @@
 
-export function findUser(post, store){
-    return store.users.find(user=>user.id===post.userId);
+export function findUser(userId, store){
+    return store.users.find(user=>user.id===userId);
   }
 
 export function findComments(post, store){
