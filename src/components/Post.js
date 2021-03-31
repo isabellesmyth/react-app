@@ -4,6 +4,7 @@ import css from './Post.module.css';
 import publicUrl from 'utils/publicUrl';
 import Comments from './Comments'
 import { findComments } from 'utils/find';
+import { Link } from 'react-router-dom';
 
 
 
@@ -13,6 +14,7 @@ function Post(props) {
 
     function handleLike(){
         props.onLike(props.post.id);
+        console.log("handling like");
 
     }
 
@@ -30,8 +32,10 @@ function Post(props) {
             <section className={css.post}>
 
             <header className={css.Header}>
-                <img className={css.profilePhoto} src={publicUrl(props.user.photo)} alt={props.user.id}/>
-                <span className={css.bold}>{props.post.userId}</span>
+            <img className={css.profilePhoto} src={publicUrl(props.user.photo)} alt={props.user.id}/>
+                <Link to={`/profile/${props.user.id}`}>
+                    <span className={css.bold}>{props.user.id}</span>
+                </Link>
             </header>
             <img className={css.postPhoto} src={publicUrl(props.post.photo)} alt={props.post.desc}/>
             
@@ -40,6 +44,7 @@ function Post(props) {
                     {props.likes.self?
                     <img src={ publicUrl('/assets/unlike.svg')} onClick={handleUnlike}/>:
                     <img src={ publicUrl('/assets/like.svg')} onClick={handleLike}/>
+                
                     }
                 </button>
                 <button onClick={e => setToggleComment(!toggleComment)}>

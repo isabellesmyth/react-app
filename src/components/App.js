@@ -1,5 +1,6 @@
 
 import React, {useState} from 'react';
+
 import Home from './Home';
 import css from './App.module.css';
 import Header from './Header';
@@ -12,6 +13,11 @@ import publicUrl from 'utils/publicUrl';
 import initialStore from 'utils/initialStore';
 import {findUser, findPosts} from 'utils/find';
 import uniqueId from 'utils/uniqueId';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
 
 function App() {
 
@@ -42,7 +48,27 @@ function App() {
       // 1. Call setPage to come back to the home page (we will use Router to improve this)
     }
   
-  
+    function addFollower(userId, followerId){
+      // use concat
+      const newFollower = {
+        userId,
+        followerId: store.currentUserId
+      }
+      setStore({
+        ...store,
+        followers: store.followers.concat(newFollower)
+      });
+      console.log("followed")
+    }
+    function removeFollower(userId, followerId){
+      // use filter
+      console.log("unfollowed")
+      setStore({
+        ...store,// spread props. make sure you understand this
+        followers: store.followers.filter(follower=>!(follower.followerId===store.currentUserId && follower.userId===userId))
+      
+    });
+    }
     
     function addLike(postId){
       const like = {
@@ -55,6 +81,8 @@ function App() {
         ...store,
         likes: store.likes.concat(like)
       });
+
+      console.log("added like to store");
     }
     
     function removeLike(postId){
@@ -73,41 +101,63 @@ function App() {
     }
 
 
-  function renderMain(page) {
-    switch (page) {
-      case "home": return <Home
-      store={store}
-      onLike={addLike} 
-      onUnlike={removeLike}
-      onComment={addComment}
-      
-    />;
-      case "explore": return <Explore />;
-      case "newPost": return <NewPost 
-      store={store}
-      addPost={addPost}
-      cancelPost={cancelPost}
-      />;
-      case "like": return <Activity />;
-      case "profile": 
-        
-        return <Profile
-        user={findUser(store.currentUserId, store)}
-        posts={findPosts(store.currentUserId, store)}
-      />;
-      default: return <Home
-      store={store}
+  return (
+    <Router basename={process.env.PUBLIC_URL}>
+      <div className={css.container}>
+        <Header/>
+        <main className={css.content}>
+    <Switch>
+<Route path="/home">
+<Home store={store}
       onLike={addLike}
       onUnlike={removeLike}
       onComment={addComment}
+    />
+  </Route>
+  <Route path="/newPost">
+  <NewPost store={store}
+      addPost={addPost}
+      cancelPost={cancelPost}
+      />
+  </Route>
+  <Route path="/like">
+  <Activity />
+  </Route>
+  <Route path="/profile/:userId?">
+  <Profile store={store}
+   onFollow={addFollower}
+   onUnfollow={removeFollower} />
+</Route>
+  <Route path="/explore">
+      <Explore store={store}/>
+  </Route>
+	<Route path="/profile">
+  <Profile store={store}
+  onFollow={addFollower}
+  onUnfollow={removeFollower}
+      />
+  </Route>
+  <Route path="/:postId?">
+  <Home store={store}
+        onLike={addLike}
+        onUnlike={removeLike}
+        onComment={addComment}/>
+</Route>
 
-     
-    />;
-      
-    }
-    
-  }
+  <Route path="/">
+    <Home store={store}
+          onLike={addLike}
+          onUnlike={removeLike}
+          onComment={addComment}/>
+  </Route>
+</Switch>
+        </main>
+        <NavBar/>
+      </div>
+    </Router>
+  );
 
+  
 
 
   function addComment(postId, text){
@@ -121,17 +171,19 @@ function App() {
       ...store,
         comments:store.comments.concat(comment)
     });
+
+    console.log("added comment to store");
   }
 
  
   return(
-    <div className={css.container}>
-    <Header />
-    <main className={css.content}>
-      {renderMain(page)}
-    </main>
-    <NavBar onNavChange={setPage} />
-  </div>
+
+      <Router basename={process.env.PUBLIC_URL}>
+        <div className={css.container}>
+          ...
+        </div>
+      </Router>
+    
     );
   
 }

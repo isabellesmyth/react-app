@@ -1,7 +1,9 @@
 import React from 'react';
 import css from './NavBar.module.css';
 import publicUrl from 'utils/publicUrl';
-
+import {
+    Link
+  } from "react-router-dom";
 
 
 
@@ -15,33 +17,31 @@ function Navbar(props) {
     return (
         <nav className={css.navbar}>
             <div className={css.navItem}>
-        
-                <button onClick={e=>handleNavChange('home')}>
-                <img src={publicUrl('/assets/home.svg')}/>
-                </button>
+            <Link to="/">
+    <img src={publicUrl('/assets/home.svg')} alt="Home"/>
+        </Link>
             </div>
             <div className={css.navItem}>
               
-                <button onClick={e=>handleNavChange('explore')}>
-                <img src={publicUrl('/assets/explore.svg')}/>
-                </button>
+            <Link to="/explore">
+  <img src={publicUrl('/assets/explore.svg')} alt="explore"/>
+</Link>
             </div>
             <div className={css.navItem}>
-               
-                <button onClick={e=>handleNavChange('newPost')}>
-                <img src={publicUrl('/assets/newpost.svg')}/>
-                </button>
+            <Link to="/newPost">
+  <img src={publicUrl('/assets/newpost.svg')} alt="newpost"/>
+</Link>
             </div>
             <div className={css.navItem}>
                 
-                <button onClick={e=>handleNavChange('like')}>
-                <img src={publicUrl('/assets/like.svg')}/>
-                </button>
+            <Link to="/like">
+  <img src={publicUrl('/assets/like.svg')} alt="like"/>
+</Link>
             </div>
             <div className={css.navItem}>
-                <button onClick={e=>handleNavChange('profile')}>
-                <img src={publicUrl('/assets/profile.svg')}/>
-                </button>
+            <Link to="/profile">
+  <img src={publicUrl('/assets/profile.svg')} alt="profile"/>
+</Link>
             </div>
 			
         </nav>

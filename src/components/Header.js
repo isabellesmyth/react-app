@@ -5,25 +5,25 @@ import publicUrl from 'utils/publicUrl';
 
 function Header() {
     return (
-        <nav className={css.header}>
-            <div className={css.navItem}>
-                <button>
-                <img src={publicUrl('/assets/message.svg')}/>
-                </button>
-            </div>
-            <div className={css.navItem}>
-                <button>
-                <img src={publicUrl('/assets/logo.png')}/>
-                </button>
-            </div>
-            <div className={css.navItem}>
-                <button>
-                <img src={publicUrl('/assets/message.svg')}/>
-                </button>
-            </div>
+       
 
-        </nav>
-    );
+    <header className={css.header}>
+    <div>
+      <button>
+      <img src={publicUrl('/assets/message.svg')}/>
+      </button>
+    </div>
+    <div>
+    <img src={publicUrl('/assets/logo.png')}/>
+    </div>
+    <div>
+      <button>
+      <img src={publicUrl('/assets/message.svg')}/>
+      </button>
+    </div>
+    
+</header>
+);
 }
 
 export default Header;
