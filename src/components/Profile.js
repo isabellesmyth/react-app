@@ -80,9 +80,11 @@ function Profile(props) {
         </li>
       </ul>
       <div className={css.posts}>
-        {posts.map(post => (
-          <PostThumbnail post={post} />
-        ))}
+      {posts.map(p => (
+                    <Link key={p.id} to={`/${p.id}`}>
+                        <PostThumbnail post={p}/>
+                    </Link>
+                ))}
       </div>
     </div>
   );
