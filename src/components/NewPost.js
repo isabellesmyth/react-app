@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
+import { useContext } from 'react';
 import css from './NewPost.module.css';
 import FileLoader from './FileLoader.js';
 import {
   useHistory
 } from "react-router-dom";
+import { StoreContext } from 'contexts/StoreContext';
 
 function NewPost(props) {
+  let {
+    addPost
+  } = useContext(StoreContext);
   const history = useHistory();
   const [dragging, setDragging] = useState(false); // to show a dragging effect
   const [desc, setDesc] = useState('');
@@ -56,7 +61,7 @@ function NewPost(props) {
                 setError("There Is No Photo Added");
                 return;
             }
-            props.addPost(photo, desc);
+            addPost(photo, desc);
             setError('');
             history.push('/');
             

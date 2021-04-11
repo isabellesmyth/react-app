@@ -1,37 +1,43 @@
-import React from 'react';
+
 import css from './App.module.css';
 import Post from './Post';
-import {findLikes, findComments} from 'utils/find';
+import { findLikes, findComments } from 'utils/find';
 import { useParams } from 'react-router-dom';
-
+import React, { useContext } from 'react';
+import { StoreContext } from 'contexts/StoreContext';
 
 function Home(props) {
-  let {postId} = useParams(); // the variable name has to match the parameter name
-  const {store} = props; // retrieve store
+  let {
+    posts, users, comments, likes, currentUserId,
+    addComment, addLike, removeLike
+  } = useContext(StoreContext);
 
-  function findUser(post, store){
-    return store.users.find(user=>user.id===post.userId);
+  let { postId } = useParams(); // the variable name has to match the parameter name
+  const { store } = props; // retrieve store
+
+  function findUser(post) {
+    return users.find(user => user.id === post.userId);
   }
 
-  return (		
+  return (
     <div>
- {store.posts.filter(post => (
-                postId ? post.id === postId : true
-            )).sort((a, b) => (
-                new Date(b.datetime) - new Date(a.datetime)
-            )).map(post => (
+      {posts.filter(post => (
+        postId ? post.id === postId : true
+      )).sort((a, b) => (
+        new Date(b.datetime) - new Date(a.datetime)
+      )).map(post => (
         <Post
-        key={post.id}
-        user={findUser(post, store)}
-        post={post}
-        comments={findComments(post, store)}
-        likes={findLikes(post, store)}
-        onLike={props.onLike} 
-        onUnlike={props.onUnlike}
-        onComment={props.onComment} 
+          key={post.id}
+          user={findUser(post, users)}
+          post={post}
+          comments={findComments(post, comments)}
+          likes={findLikes(post, likes, currentUserId)}
+          onLike={addLike}
+          onUnlike={removeLike}
+          onComment={addComment}
         />
-    ))}
-</div>
+      ))}
+    </div>
   );
 
 }

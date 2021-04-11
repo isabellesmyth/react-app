@@ -6,31 +6,36 @@ import {findUser, findPosts} from 'utils/find';
 import PostThumbnail from './PostThumbnail';
 import { Link, useParams } from 'react-router-dom';
 import css from './Profile.module.css';
-
+import { useContext } from 'react';
+import { StoreContext } from 'contexts/StoreContext';
 
 
 function Profile(props) {
     const params = useParams();
     console.log(params.userId);
+    let {
+       followers, users, addFollower, removeFollower, currentUserId
+    } = useContext(StoreContext);
+    const {posts:allPosts} = useContext(StoreContext);
+
     
-    const { store } = props;
-    const userId = params.userId ? params.userId : props.store.currentUserId;
-    const user = findUser(userId, props.store);
-    const followers = props.store.followers.filter(f=> f.userId == userId);
-    const following = props.store.followers.filter(f=> f.followerId == userId);
-    const posts = findPosts(userId, props.store);
+    const userId = params.userId ? params.userId : currentUserId;
+    const user = findUser(userId, users);
+    const followers1 = followers.filter(f=> f.userId == userId);
+    const following = followers.filter(f=> f.followerId == userId);
+    const posts = findPosts(userId, allPosts);
     let follows= false;
-    let user_followers= followers.map(d=>d.followerId);
-    if (user_followers.filter(d=>d===store.currentUserId).length>0){
-        console.log(user_followers.filter(d=>d===store.currentUserId))
+    let user_followers= followers1.map(d=>d.followerId);
+    if (user_followers.filter(d=>d===currentUserId).length>0){
+        console.log(user_followers.filter(d=>d===currentUserId))
         follows = true;
       }
 
       function handleFollow(){
-        props.onFollow(userId);
+        addFollower(userId);
       }
       function handleUnfollow(){
-        props.onUnfollow(userId);
+        removeFollower(userId);
       }
     
     
@@ -49,7 +54,7 @@ function Profile(props) {
         <div>
           <button className={css.unfollowBtn} onClick={handleUnfollow}>Unfollow</button>
           </div>}
-          {!follows && userId != store.currentUserId &&
+          {!follows && userId != currentUserId &&
         <div>
           <button className={css.followBtn} onClick={handleFollow}>Follow</button>
           </div>}
