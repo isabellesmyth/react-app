@@ -10,7 +10,7 @@ function Header() {
     <header className={css.header}>
     <div>
       <button>
-      <img src={publicUrl('/assets/message.svg')}/>
+      <img src={publicUrl('/assets/camera.svg')}/>
       </button>
     </div>
     <div>
