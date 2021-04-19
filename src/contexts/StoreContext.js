@@ -1,51 +1,91 @@
 import React, { useEffect, createContext, useState } from 'react';
 import uniqueId from 'utils/uniqueId.js';
 import initialStore from 'utils/initialStore.js';
-
+import firebase from 'firebase';
+import 'firebase/database';
 // export the context so that other components can import
 export const StoreContext = createContext();
 
 
-function StoreContextProvider(props){
+
+
+
+// Initialize Firebase
+var firebaseConfig = {
+    apiKey: "AIzaSyD_-qb8BhtseMA7I4RnkmAfvsF8iaEGQ5E",
+    authDomain: "react-app-be7a3.firebaseapp.com",
+    projectId: "react-app-be7a3",
+    storageBucket: "react-app-be7a3.appspot.com",
+    messagingSenderId: "213747839972",
+    appId: "1:213747839972:web:0c4dcdeb27bc943e418df1"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+function StoreContextProvider(props) {
+    
+
+
+
+    const [currentUserId, setCurrentUserId] = useState('judy'); // or 'judy'
+    const [users, setUsers] = useState([]);
+    const [posts, setPosts] = useState([]);
+    const [likes, setLikes] = useState([]);
+    const [followers, setFollowers] = useState([]);
+    const [comments, setComments] = useState([]);
     const [page, setPage] = useState('home');
     //const [store, setStore] = useState(initialStore);
 
     let temp = JSON.parse(window.localStorage.getItem('store')) || initialStore;
-   
-    const [store, setStore] = useState(()=>{
-        return JSON.parse(window.localStorage.getItem('store')) || initialStore;
-    });
-    useEffect(()=>{
-        window.localStorage.setItem('store', JSON.stringify(store));
-    }, [store]);
+
+    
+    useEffect(()=>{// initialization
+        db.collection('users').get().then(snapshot=>{
+          const users = snapshot.docs.map(d=>d.data());
+          setUsers(users);
+        });
+        db.collection('posts').get().then(snapshot=>{
+          const posts = snapshot.docs.map(d=>d.data());
+          setPosts(posts);
+        });
+        db.collection('followers').get().then(snapshot=>{
+            const followers = snapshot.docs.map(d=>d.data());
+            setFollowers(followers);
+        });
+        db.collection('likes').get().then(snapshot=>{
+          const likes = snapshot.docs.map(d=>d.data());
+          setLikes(likes);
+        });
+        db.collection('comments').get().then(snapshot=>{
+            const comments = snapshot.docs.map(d=>d.data());
+            setComments(comments);
+        });
+        
+      }, []);
 
     function addComment(postId, text) {
         const comment = {
-            userId: store.currentUserId,
+            userId: currentUserId,
             postId,
             text,
             datetime: new Date().toISOString()
         };
-        setStore({
-            ...store,
-            comments: store.comments.concat(comment)
-        });
-
+        setComments(comments.concat(comment));
+        db.collection('comments').add(comment)
         console.log("added comment to store");
     }
 
     function addPost(photo, desc) {
         const newPost = {
             id: uniqueId('post'),
-            userId: store.currentUserId,
+            userId: currentUserId,
             photo,
             desc,
             datetime: new Date().toISOString()
         };
-        setStore({
-            ...store,
-            posts: store.posts.concat(newPost)
-        });
+        setPosts(posts.concat(newPost));
+        db.collection('posts').add(newPost)
+
         setPage('home');
         // TODO:
         // 1. Create a new post object (use uniqueId('post') to create an id)
@@ -57,22 +97,18 @@ function StoreContextProvider(props){
         // use concat
         const newFollower = {
             userId,
-            followerId: store.currentUserId
+            followerId: currentUserId
         }
-        setStore({
-            ...store,
-            followers: store.followers.concat(newFollower)
-        });
+        setFollowers(followers.concat(newFollower));
         console.log("followed")
+        db.collection('followers').add(newFollower)
     }
-    function removeFollower(userId, followerId) {
+    function removeFollower(userId) {
         // use filter
+       
         console.log("unfollowed")
-        setStore({
-            ...store,// spread props. make sure you understand this
-            followers: store.followers.filter(follower => !(follower.followerId === store.currentUserId && follower.userId === userId))
-
-        });
+        setFollowers(followers.filter(follower => !(follower.followerId === currentUserId && follower.userId === userId)));
+        db.collection('followers').where('userId', '==', userId).where('followerId', '==', currentUserId).get().then(snapshot => snapshot.forEach(doc => doc.ref.delete()));
     }
     function cancelPost() {
         setPage('home');
@@ -82,47 +118,45 @@ function StoreContextProvider(props){
 
     function addLike(postId) {
         const like = {
-            userId: store.currentUserId,
+            userId: currentUserId,
             postId,
             datetime: new Date().toISOString()
         };
 
-        setStore({
-            ...store,
-            likes: store.likes.concat(like)
-        });
 
+        setLikes(likes.concat(like));
+        db.collection('likes').add(like);
         console.log("added like to store");
     }
 
     function removeLike(postId) {
         const like = {
-            userId: store.currentUserId,
+            userId: currentUserId,
             postId, // make sure you understand this shorthand syntax
 
         };
-
-        setStore({
-            ...store,// spread props. make sure you understand this
-            likes: store.likes.filter(like => !(like.userId === store.currentUserId && like.postId === postId))
-
-        });
+        setLikes(likes.filter(like => !(like.userId === currentUserId && like.postId === postId)));
+        db.collection('likes')
+            .where('userId', '==', currentUserId)
+            .where('postId', '==', postId)
+            .get()
+            .then(snapshot => snapshot.forEach(doc => doc.ref.delete()));
 
     }
-	return (
-		<StoreContext.Provider value = {{...store, cancelPost, addComment, addLike, removeLike, addPost, addFollower, removeFollower}}>
-			{props.children}
-		</StoreContext.Provider>
-	);
+    return (
+        <StoreContext.Provider value={{posts, users, comments, likes, currentUserId, followers, cancelPost, addComment, addLike, removeLike, addPost, addFollower, removeFollower }}>
+            {props.children}
+        </StoreContext.Provider>
+    );
 }
 
-    
-
-       
 
 
 
-   
+
+
+
+
 
 
 export default StoreContextProvider; // export this component as default

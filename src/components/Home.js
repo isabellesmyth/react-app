@@ -7,6 +7,7 @@ import React, { useContext } from 'react';
 import { StoreContext } from 'contexts/StoreContext';
 
 function Home(props) {
+ console.log(useContext(StoreContext));
   let {
     posts, users, comments, likes, currentUserId,
     addComment, addLike, removeLike
