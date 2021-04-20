@@ -4,7 +4,9 @@ import StoreContextProvider from 'contexts/StoreContext';
 import Home from './Home';
 import css from './App.module.css';
 import Header from './Header';
+import Signup from './Signup';
 import NavBar from './NavBar';
+import Login from './Login';
 import Activity from './Activity';
 import NewPost from './NewPost';
 import Explore from './Explore';
@@ -32,6 +34,12 @@ function App() {
         <Header/>
         <main className={css.content}>
     <Switch>
+    <Route path="/login">
+	<Login />
+</Route>
+<Route path="/signup">
+    <Signup />
+</Route>
 <Route path="/home">
 <Home 
     />

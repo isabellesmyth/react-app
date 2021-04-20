@@ -8,6 +8,8 @@ import { Link, useParams } from 'react-router-dom';
 import css from './Profile.module.css';
 import { useContext } from 'react';
 import { StoreContext } from 'contexts/StoreContext';
+import { Redirect } from "react-router-dom";
+
 
 
 function Profile(props) {
@@ -22,7 +24,9 @@ function Profile(props) {
     const userId = params.userId ? params.userId : currentUserId;
     const user = findUser(userId, users);
     const followers1 = followers.filter(f=> f.userId == userId);
+    
     const following = followers.filter(f=> f.followerId == userId);
+    
     const posts = findPosts(userId, allPosts);
     let follows= false;
     let user_followers= followers1.map(d=>d.followerId);
@@ -30,6 +34,7 @@ function Profile(props) {
         console.log(user_followers.filter(d=>d===currentUserId))
         follows = true;
       }
+     
 
       function handleFollow(){
         addFollower(userId);
@@ -41,7 +46,7 @@ function Profile(props) {
     
 
     return(
-        <div>
+       !user?<Redirect to="login"/>:  <div>
       <header className={css.header}>
         <div className={css.photo}>
           <img src={publicUrl(user.photo)} alt="Profile" />
@@ -74,7 +79,7 @@ function Profile(props) {
           posts
         </li>
         <li>
-          <span>{followers.length}</span>
+          <span>{followers1.length}</span>
           <br />
           followers
         </li>

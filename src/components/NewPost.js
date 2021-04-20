@@ -2,21 +2,23 @@ import React, { useState } from 'react';
 import { useContext } from 'react';
 import css from './NewPost.module.css';
 import FileLoader from './FileLoader.js';
+import { Redirect } from "react-router-dom";
+import {findUser} from 'utils/find';
 import {
-  useHistory
+   useHistory
 } from "react-router-dom";
 import { StoreContext } from 'contexts/StoreContext';
 
 function NewPost(props) {
   let {
-    addPost
+   currentUserId,users, addPost
   } = useContext(StoreContext);
   const history = useHistory();
   const [dragging, setDragging] = useState(false); // to show a dragging effect
   const [desc, setDesc] = useState('');
   const [photo, setPhoto] = useState(null);
   const [error, setError] = useState(''); // to show an error message
-
+  const user = findUser(currentUserId, users);
   
   function handleFileDragEnter(e){
     setDragging(true);
@@ -81,8 +83,7 @@ function NewPost(props) {
   
   }
   return (
-    <div>
-        
+    !user?<Redirect to="login"/> : <div>
         <div className={css.photo}>
           {!photo?  <div className={css.message}>Drop your image</div>:
                     <img src={photo} alt="New Post"/>}

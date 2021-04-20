@@ -3,6 +3,8 @@ import uniqueId from 'utils/uniqueId.js';
 import initialStore from 'utils/initialStore.js';
 import firebase from 'firebase';
 import 'firebase/database';
+import 'firebase/auth';
+import { useHistory } from 'react-router-dom'
 // export the context so that other components can import
 export const StoreContext = createContext();
 
@@ -21,48 +23,65 @@ var firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
+const auth = firebase.auth();
 
 function StoreContextProvider(props) {
-    
 
 
 
-    const [currentUserId, setCurrentUserId] = useState('judy'); // or 'judy'
+
+    const [currentUserId, setCurrentUserId] = useState(null); // or 'judy'
     const [users, setUsers] = useState([]);
     const [posts, setPosts] = useState([]);
     const [likes, setLikes] = useState([]);
     const [followers, setFollowers] = useState([]);
     const [comments, setComments] = useState([]);
+
     const [page, setPage] = useState('home');
     //const [store, setStore] = useState(initialStore);
 
     let temp = JSON.parse(window.localStorage.getItem('store')) || initialStore;
+    let history = useHistory();
 
-    
-    useEffect(()=>{// initialization
-        db.collection('users').get().then(snapshot=>{
-          const users = snapshot.docs.map(d=>d.data());
-          setUsers(users);
+    useEffect(() => {// initialization
+        db.collection('users').get().then(snapshot => {
+            const users = snapshot.docs.map(d => d.data());
+            setUsers(users);
         });
-        db.collection('posts').get().then(snapshot=>{
-          const posts = snapshot.docs.map(d=>d.data());
-          setPosts(posts);
+        db.collection('posts').get().then(snapshot => {
+            const posts = snapshot.docs.map(d => d.data());
+            setPosts(posts);
         });
-        db.collection('followers').get().then(snapshot=>{
-            const followers = snapshot.docs.map(d=>d.data());
+        db.collection('followers').get().then(snapshot => {
+            const followers = snapshot.docs.map(d => d.data());
             setFollowers(followers);
         });
-        db.collection('likes').get().then(snapshot=>{
-          const likes = snapshot.docs.map(d=>d.data());
-          setLikes(likes);
+        db.collection('likes').get().then(snapshot => {
+            const likes = snapshot.docs.map(d => d.data());
+            setLikes(likes);
         });
-        db.collection('comments').get().then(snapshot=>{
-            const comments = snapshot.docs.map(d=>d.data());
+        db.collection('comments').get().then(snapshot => {
+            const comments = snapshot.docs.map(d => d.data());
             setComments(comments);
         });
-        
-      }, []);
 
+    }, []);
+
+    
+
+    function login(email, password) {
+        auth.signInWithEmailAndPassword(email, password).then((response) => {
+            db.collection('users')
+                .where('email','==', response.user.email)
+                .get()
+                .then(snapshot => {
+                    setCurrentUserId(snapshot.docs[0].data().id);
+                })
+            history.push('/');
+        }).catch(error => {
+            setCurrentUserId(null);
+        });
+    }
     function addComment(postId, text) {
         const comment = {
             userId: currentUserId,
@@ -105,7 +124,7 @@ function StoreContextProvider(props) {
     }
     function removeFollower(userId) {
         // use filter
-       
+
         console.log("unfollowed")
         setFollowers(followers.filter(follower => !(follower.followerId === currentUserId && follower.userId === userId)));
         db.collection('followers').where('userId', '==', userId).where('followerId', '==', currentUserId).get().then(snapshot => snapshot.forEach(doc => doc.ref.delete()));
@@ -143,8 +162,25 @@ function StoreContextProvider(props) {
             .then(snapshot => snapshot.forEach(doc => doc.ref.delete()));
 
     }
+    function signup(email, password, bio, id, name, photo) {
+        const user = {
+            email, id, name, bio, photo
+        };
+        auth.createUserWithEmailAndPassword(email, password).then(() => {
+            // add a user to the firestore database
+            console.log(user);
+            db.collection('users').add(user);
+            // add a user to the app state
+            setUsers(users.concat(user));
+            // set the user as a current user 
+            setCurrentUserId(id);
+            // route to home
+            history.push('/');
+
+        })
+    }
     return (
-        <StoreContext.Provider value={{posts, users, comments, likes, currentUserId, followers, cancelPost, addComment, addLike, removeLike, addPost, addFollower, removeFollower }}>
+        <StoreContext.Provider value={{ login, signup, posts, users, comments, likes, currentUserId, followers, cancelPost, addComment, addLike, removeLike, addPost, addFollower, removeFollower }}>
             {props.children}
         </StoreContext.Provider>
     );
