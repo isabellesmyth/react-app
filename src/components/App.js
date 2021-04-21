@@ -16,7 +16,7 @@ import initialStore from 'utils/initialStore';
 import {findUser, findPosts} from 'utils/find';
 import uniqueId from 'utils/uniqueId';
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Switch,
   Route
 } from "react-router-dom";
